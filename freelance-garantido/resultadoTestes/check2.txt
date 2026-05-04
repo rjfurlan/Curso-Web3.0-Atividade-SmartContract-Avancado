@@ -1,0 +1,1105 @@
+Summary
+ - [incorrect-exp](#incorrect-exp) (1 results) (High)
+ - [unchecked-transfer](#unchecked-transfer) (12 results) (High)
+ - [divide-before-multiply](#divide-before-multiply) (10 results) (Medium)
+ - [reentrancy-no-eth](#reentrancy-no-eth) (8 results) (Medium)
+ - [unused-return](#unused-return) (3 results) (Medium)
+ - [missing-zero-check](#missing-zero-check) (4 results) (Low)
+ - [calls-loop](#calls-loop) (3 results) (Low)
+ - [reentrancy-benign](#reentrancy-benign) (4 results) (Low)
+ - [timestamp](#timestamp) (3 results) (Low)
+ - [assembly](#assembly) (33 results) (Informational)
+ - [pragma](#pragma) (1 results) (Informational)
+ - [solc-version](#solc-version) (6 results) (Informational)
+ - [low-level-calls](#low-level-calls) (2 results) (Informational)
+ - [missing-inheritance](#missing-inheritance) (1 results) (Informational)
+ - [naming-convention](#naming-convention) (8 results) (Informational)
+ - [too-many-digits](#too-many-digits) (8 results) (Informational)
+ - [constable-states](#constable-states) (3 results) (Optimization)
+ - [immutable-states](#immutable-states) (6 results) (Optimization)
+## incorrect-exp
+Impact: High
+Confidence: Medium
+ - [ ] ID-0
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - [inverse = (3 * denominator) ^ 2](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L259)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+## unchecked-transfer
+Impact: High
+Confidence: Medium
+ - [ ] ID-1
+[Staking.stake(uint256)](contracts/Staking.sol#L31-L36) ignores return value by [token.transferFrom(msg.sender,address(this),amount)](contracts/Staking.sol#L34)
+
+contracts/Staking.sol#L31-L36
+
+
+ - [ ] ID-2
+[Staking.unstake(uint256)](contracts/Staking.sol#L40-L45) ignores return value by [token.transfer(msg.sender,amount)](contracts/Staking.sol#L44)
+
+contracts/Staking.sol#L40-L45
+
+
+ - [ ] ID-3
+[GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187) ignores return value by [token.transfer(job.client,job.guarantee)](contracts/GestorDeContratoGarantido.sol#L181)
+
+contracts/GestorDeContratoGarantido.sol#L175-L187
+
+
+ - [ ] ID-4
+[GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187) ignores return value by [token.transfer(job.freelancer,job.payment + job.guarantee)](contracts/GestorDeContratoGarantido.sol#L184)
+
+contracts/GestorDeContratoGarantido.sol#L175-L187
+
+
+ - [ ] ID-5
+[GestorDeContratoGarantido.approveWork(uint256)](contracts/GestorDeContratoGarantido.sol#L121-L130) ignores return value by [token.transfer(job.freelancer,job.payment + job.guarantee)](contracts/GestorDeContratoGarantido.sol#L129)
+
+contracts/GestorDeContratoGarantido.sol#L121-L130
+
+
+ - [ ] ID-6
+[GestorDeContratoGarantido.acceptJob(uint256)](contracts/GestorDeContratoGarantido.sol#L95-L108) ignores return value by [token.transferFrom(msg.sender,address(this),job.guarantee)](contracts/GestorDeContratoGarantido.sol#L101)
+
+contracts/GestorDeContratoGarantido.sol#L95-L108
+
+
+ - [ ] ID-7
+[GestorDeContratoGarantido.claimTimeout(uint256)](contracts/GestorDeContratoGarantido.sol#L162-L173) ignores return value by [token.transfer(job.client,job.payment + job.guarantee)](contracts/GestorDeContratoGarantido.sol#L172)
+
+contracts/GestorDeContratoGarantido.sol#L162-L173
+
+
+ - [ ] ID-8
+[GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)](contracts/GestorDeContratoGarantido.sol#L61-L92) ignores return value by [token.transferFrom(msg.sender,address(this),total)](contracts/GestorDeContratoGarantido.sol#L73)
+
+contracts/GestorDeContratoGarantido.sol#L61-L92
+
+
+ - [ ] ID-9
+[GestorDeContratoGarantido.cancelIfNotAccepted(uint256)](contracts/GestorDeContratoGarantido.sol#L150-L159) ignores return value by [token.transfer(job.client,job.payment)](contracts/GestorDeContratoGarantido.sol#L158)
+
+contracts/GestorDeContratoGarantido.sol#L150-L159
+
+
+ - [ ] ID-10
+[GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)](contracts/GestorDeContratoGarantido.sol#L61-L92) ignores return value by [token.transfer(owner(),fee)](contracts/GestorDeContratoGarantido.sol#L76)
+
+contracts/GestorDeContratoGarantido.sol#L61-L92
+
+
+ - [ ] ID-11
+[TokenSale.sellTokens(uint256)](contracts/TokenSale.sol#L77-L96) ignores return value by [token.transferFrom(msg.sender,address(this),telsAmount)](contracts/TokenSale.sol#L87)
+
+contracts/TokenSale.sol#L77-L96
+
+
+ - [ ] ID-12
+[Staking.reward(address,uint256)](contracts/Staking.sol#L73-L75) ignores return value by [token.transfer(user,amount)](contracts/Staking.sol#L74)
+
+contracts/Staking.sol#L73-L75
+
+
+## divide-before-multiply
+Impact: Medium
+Confidence: Medium
+ - [ ] ID-13
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [low = low / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L247)
+	- [result = low * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L274)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-14
+[TokenSale.telToUsd(uint256)](contracts/TokenSale.sol#L51-L57) performs a multiplication on the result of a division:
+	- [ethAmount = telsAmount / rate](contracts/TokenSale.sol#L53)
+	- [usdValue = (ethAmount * ethUsd) / 1e8](contracts/TokenSale.sol#L54)
+
+contracts/TokenSale.sol#L51-L57
+
+
+ - [ ] ID-15
+[Math.invMod(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L317-L363) performs a multiplication on the result of a division:
+	- [quotient = gcd / remainder](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L339)
+	- [(gcd,remainder) = (remainder,gcd - remainder * quotient)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L341-L348)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L317-L363
+
+
+ - [ ] ID-16
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L268)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-17
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse = (3 * denominator) ^ 2](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L259)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-18
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L266)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-19
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L267)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-20
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L264)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-21
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L263)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-22
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) performs a multiplication on the result of a division:
+	- [denominator = denominator / twos](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L244)
+	- [inverse *= 2 - denominator * inverse](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L265)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+## reentrancy-no-eth
+Impact: Medium
+Confidence: Medium
+ - [ ] ID-23
+Reentrancy in [GestorDeContratoGarantido.acceptJob(uint256)](contracts/GestorDeContratoGarantido.sol#L95-L108):
+	External calls:
+	- [token.transferFrom(msg.sender,address(this),job.guarantee)](contracts/GestorDeContratoGarantido.sol#L101)
+	- [nft.mint(msg.sender,jobId,uint8(1))](contracts/GestorDeContratoGarantido.sol#L104)
+	State variables written after the call(s):
+	- [job.freelancer = msg.sender](contracts/GestorDeContratoGarantido.sol#L106)
+	[GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58) can be used in cross function reentrancies:
+	- [GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58)
+	- [GestorDeContratoGarantido.markDelivered(uint256)](contracts/GestorDeContratoGarantido.sol#L111-L118)
+	- [GestorDeContratoGarantido.openDispute(uint256)](contracts/GestorDeContratoGarantido.sol#L133-L147)
+	- [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187)
+	- [job.status = Status.Accepted](contracts/GestorDeContratoGarantido.sol#L107)
+	[GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58) can be used in cross function reentrancies:
+	- [GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58)
+	- [GestorDeContratoGarantido.markDelivered(uint256)](contracts/GestorDeContratoGarantido.sol#L111-L118)
+	- [GestorDeContratoGarantido.openDispute(uint256)](contracts/GestorDeContratoGarantido.sol#L133-L147)
+	- [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187)
+
+contracts/GestorDeContratoGarantido.sol#L95-L108
+
+
+ - [ ] ID-24
+Reentrancy in [ContractNFT.mint(address,uint256,uint8)](contracts/ContractNFT.sol#L29-L49):
+	External calls:
+	- [_safeMint(to,nftCount)](contracts/ContractNFT.sol#L34)
+		- [retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data)](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L33-L47)
+		- [ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data)](node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#L289)
+	State variables written after the call(s):
+	- [nftCount ++](contracts/ContractNFT.sol#L46)
+	[ContractNFT.nftCount](contracts/ContractNFT.sol#L8) can be used in cross function reentrancies:
+	- [ContractNFT.mint(address,uint256,uint8)](contracts/ContractNFT.sol#L29-L49)
+	- [ContractNFT.nftCount](contracts/ContractNFT.sol#L8)
+
+contracts/ContractNFT.sol#L29-L49
+
+
+ - [ ] ID-25
+Reentrancy in [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187):
+	External calls:
+	- [token.transfer(job.client,job.guarantee)](contracts/GestorDeContratoGarantido.sol#L181)
+	State variables written after the call(s):
+	- [job.status = Status.CompletedReject](contracts/GestorDeContratoGarantido.sol#L182)
+	[GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58) can be used in cross function reentrancies:
+	- [GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58)
+	- [GestorDeContratoGarantido.markDelivered(uint256)](contracts/GestorDeContratoGarantido.sol#L111-L118)
+	- [GestorDeContratoGarantido.openDispute(uint256)](contracts/GestorDeContratoGarantido.sol#L133-L147)
+	- [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187)
+
+contracts/GestorDeContratoGarantido.sol#L175-L187
+
+
+ - [ ] ID-26
+Reentrancy in [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)](contracts/GestorDeContratoGarantido.sol#L61-L92):
+	External calls:
+	- [token.transferFrom(msg.sender,address(this),total)](contracts/GestorDeContratoGarantido.sol#L73)
+	- [token.transfer(owner(),fee)](contracts/GestorDeContratoGarantido.sol#L76)
+	- [nft.mint(msg.sender,jobCount,uint8(0))](contracts/GestorDeContratoGarantido.sol#L89)
+	State variables written after the call(s):
+	- [jobCount ++](contracts/GestorDeContratoGarantido.sol#L91)
+	[GestorDeContratoGarantido.jobCount](contracts/GestorDeContratoGarantido.sol#L22) can be used in cross function reentrancies:
+	- [GestorDeContratoGarantido.jobCount](contracts/GestorDeContratoGarantido.sol#L22)
+
+contracts/GestorDeContratoGarantido.sol#L61-L92
+
+
+ - [ ] ID-27
+Reentrancy in [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83):
+	External calls:
+	- [staking.lock(msg.sender,d.stakePerJuror)](contracts/DAO.sol#L64)
+	- [_resolve(disputeId)](contracts/DAO.sol#L81)
+		- [staking.slash(user,d.stakePerJuror)](contracts/DAO.sol#L107)
+		- [staking.unlock(user_scope_1,d.stakePerJuror)](contracts/DAO.sol#L123)
+		- [staking.reward(user_scope_1,rewardPerWinner)](contracts/DAO.sol#L124)
+		- [GestorDeContratoGarantido(gestor).resolveFromDAO(d.jobId,! freelancerWins)](contracts/DAO.sol#L131)
+	State variables written after the call(s):
+	- [_resolve(disputeId)](contracts/DAO.sol#L81)
+		- [d.resolved = true](contracts/DAO.sol#L128)
+	[DAO.disputes](contracts/DAO.sol#L22) can be used in cross function reentrancies:
+	- [DAO._resolve(uint256)](contracts/DAO.sol#L86-L132)
+	- [DAO.disputes](contracts/DAO.sol#L22)
+	- [DAO.openCase(uint256,uint256)](contracts/DAO.sol#L37-L51)
+	- [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83)
+
+contracts/DAO.sol#L54-L83
+
+
+ - [ ] ID-28
+Reentrancy in [DAO._resolve(uint256)](contracts/DAO.sol#L86-L132):
+	External calls:
+	- [staking.slash(user,d.stakePerJuror)](contracts/DAO.sol#L107)
+	- [staking.unlock(user_scope_1,d.stakePerJuror)](contracts/DAO.sol#L123)
+	- [staking.reward(user_scope_1,rewardPerWinner)](contracts/DAO.sol#L124)
+	State variables written after the call(s):
+	- [d.resolved = true](contracts/DAO.sol#L128)
+	[DAO.disputes](contracts/DAO.sol#L22) can be used in cross function reentrancies:
+	- [DAO._resolve(uint256)](contracts/DAO.sol#L86-L132)
+	- [DAO.disputes](contracts/DAO.sol#L22)
+	- [DAO.openCase(uint256,uint256)](contracts/DAO.sol#L37-L51)
+	- [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83)
+
+contracts/DAO.sol#L86-L132
+
+
+ - [ ] ID-29
+Reentrancy in [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83):
+	External calls:
+	- [staking.lock(msg.sender,d.stakePerJuror)](contracts/DAO.sol#L64)
+	State variables written after the call(s):
+	- [d.votesFreelancer ++](contracts/DAO.sol#L72)
+	[DAO.disputes](contracts/DAO.sol#L22) can be used in cross function reentrancies:
+	- [DAO._resolve(uint256)](contracts/DAO.sol#L86-L132)
+	- [DAO.disputes](contracts/DAO.sol#L22)
+	- [DAO.openCase(uint256,uint256)](contracts/DAO.sol#L37-L51)
+	- [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83)
+	- [d.votesClient ++](contracts/DAO.sol#L74)
+	[DAO.disputes](contracts/DAO.sol#L22) can be used in cross function reentrancies:
+	- [DAO._resolve(uint256)](contracts/DAO.sol#L86-L132)
+	- [DAO.disputes](contracts/DAO.sol#L22)
+	- [DAO.openCase(uint256,uint256)](contracts/DAO.sol#L37-L51)
+	- [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83)
+	- [hasVoted[disputeId][msg.sender] = true](contracts/DAO.sol#L69)
+	[DAO.hasVoted](contracts/DAO.sol#L25) can be used in cross function reentrancies:
+	- [DAO.hasVoted](contracts/DAO.sol#L25)
+	- [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83)
+
+contracts/DAO.sol#L54-L83
+
+
+ - [ ] ID-30
+Reentrancy in [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187):
+	External calls:
+	- [token.transfer(job.freelancer,job.payment + job.guarantee)](contracts/GestorDeContratoGarantido.sol#L184)
+	State variables written after the call(s):
+	- [job.status = Status.CompletedOk](contracts/GestorDeContratoGarantido.sol#L185)
+	[GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58) can be used in cross function reentrancies:
+	- [GestorDeContratoGarantido.jobs](contracts/GestorDeContratoGarantido.sol#L58)
+	- [GestorDeContratoGarantido.markDelivered(uint256)](contracts/GestorDeContratoGarantido.sol#L111-L118)
+	- [GestorDeContratoGarantido.openDispute(uint256)](contracts/GestorDeContratoGarantido.sol#L133-L147)
+	- [GestorDeContratoGarantido.resolveFromDAO(uint256,bool)](contracts/GestorDeContratoGarantido.sol#L175-L187)
+
+contracts/GestorDeContratoGarantido.sol#L175-L187
+
+
+## unused-return
+Impact: Medium
+Confidence: Medium
+ - [ ] ID-31
+[GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)](contracts/GestorDeContratoGarantido.sol#L61-L92) ignores return value by [nft.mint(msg.sender,jobCount,uint8(0))](contracts/GestorDeContratoGarantido.sol#L89)
+
+contracts/GestorDeContratoGarantido.sol#L61-L92
+
+
+ - [ ] ID-32
+[TokenSale.getEthUsdPrice()](contracts/TokenSale.sol#L28-L32) ignores return value by [(None,price,None,None,None) = ethUsdPriceFeed.latestRoundData()](contracts/TokenSale.sol#L29)
+
+contracts/TokenSale.sol#L28-L32
+
+
+ - [ ] ID-33
+[GestorDeContratoGarantido.acceptJob(uint256)](contracts/GestorDeContratoGarantido.sol#L95-L108) ignores return value by [nft.mint(msg.sender,jobId,uint8(1))](contracts/GestorDeContratoGarantido.sol#L104)
+
+contracts/GestorDeContratoGarantido.sol#L95-L108
+
+
+## missing-zero-check
+Impact: Low
+Confidence: Medium
+ - [ ] ID-34
+[GestorDeContratoGarantido.constructor(address,address,address)._dao](contracts/GestorDeContratoGarantido.sol#L28) lacks a zero-check on :
+		- [dao = _dao](contracts/GestorDeContratoGarantido.sol#L32)
+
+contracts/GestorDeContratoGarantido.sol#L28
+
+
+ - [ ] ID-35
+[ContractNFT.setGestor(address)._gestor](contracts/ContractNFT.sol#L54) lacks a zero-check on :
+		- [gestor = _gestor](contracts/ContractNFT.sol#L56)
+
+contracts/ContractNFT.sol#L54
+
+
+ - [ ] ID-36
+[DAO.setConfig(address,address)._gestor](contracts/DAO.sol#L29) lacks a zero-check on :
+		- [gestor = _gestor](contracts/DAO.sol#L32)
+
+contracts/DAO.sol#L29
+
+
+ - [ ] ID-37
+[Staking.setDAO(address)._dao](contracts/Staking.sol#L25) lacks a zero-check on :
+		- [dao = _dao](contracts/Staking.sol#L27)
+
+contracts/Staking.sol#L25
+
+
+## calls-loop
+Impact: Low
+Confidence: Medium
+ - [ ] ID-38
+[DAO._resolve(uint256)](contracts/DAO.sol#L86-L132) has external calls inside a loop: [staking.slash(user,d.stakePerJuror)](contracts/DAO.sol#L107)
+	Calls stack containing the loop:
+		DAO.vote(uint256,bool)
+
+contracts/DAO.sol#L86-L132
+
+
+ - [ ] ID-39
+[DAO._resolve(uint256)](contracts/DAO.sol#L86-L132) has external calls inside a loop: [staking.reward(user_scope_1,rewardPerWinner)](contracts/DAO.sol#L124)
+	Calls stack containing the loop:
+		DAO.vote(uint256,bool)
+
+contracts/DAO.sol#L86-L132
+
+
+ - [ ] ID-40
+[DAO._resolve(uint256)](contracts/DAO.sol#L86-L132) has external calls inside a loop: [staking.unlock(user_scope_1,d.stakePerJuror)](contracts/DAO.sol#L123)
+	Calls stack containing the loop:
+		DAO.vote(uint256,bool)
+
+contracts/DAO.sol#L86-L132
+
+
+## reentrancy-benign
+Impact: Low
+Confidence: Medium
+ - [ ] ID-41
+Reentrancy in [ContractNFT.mint(address,uint256,uint8)](contracts/ContractNFT.sol#L29-L49):
+	External calls:
+	- [_safeMint(to,nftCount)](contracts/ContractNFT.sol#L34)
+		- [retval = IERC721Receiver(to).onERC721Received(operator,from,tokenId,data)](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L33-L47)
+		- [ERC721Utils.checkOnERC721Received(_msgSender(),address(0),to,tokenId,data)](node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#L289)
+	State variables written after the call(s):
+	- [jobToTokens[jobId].push(nftCount)](contracts/ContractNFT.sol#L43)
+	- [jobs[nftCount] = JobMetadata({jobId:jobId,owner:to,role:role,active:true})](contracts/ContractNFT.sol#L36-L41)
+
+contracts/ContractNFT.sol#L29-L49
+
+
+ - [ ] ID-42
+Reentrancy in [DAO.vote(uint256,bool)](contracts/DAO.sol#L54-L83):
+	External calls:
+	- [staking.lock(msg.sender,d.stakePerJuror)](contracts/DAO.sol#L64)
+	State variables written after the call(s):
+	- [votedFreelancer[disputeId][msg.sender] = voteFreelancerChoice](contracts/DAO.sol#L68)
+	- [voters[disputeId].push(msg.sender)](contracts/DAO.sol#L67)
+
+contracts/DAO.sol#L54-L83
+
+
+ - [ ] ID-43
+Reentrancy in [Staking.stake(uint256)](contracts/Staking.sol#L31-L36):
+	External calls:
+	- [token.transferFrom(msg.sender,address(this),amount)](contracts/Staking.sol#L34)
+	State variables written after the call(s):
+	- [stakes[msg.sender] += amount](contracts/Staking.sol#L35)
+
+contracts/Staking.sol#L31-L36
+
+
+ - [ ] ID-44
+Reentrancy in [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)](contracts/GestorDeContratoGarantido.sol#L61-L92):
+	External calls:
+	- [token.transferFrom(msg.sender,address(this),total)](contracts/GestorDeContratoGarantido.sol#L73)
+	- [token.transfer(owner(),fee)](contracts/GestorDeContratoGarantido.sol#L76)
+	State variables written after the call(s):
+	- [jobs[jobCount] = Job({client:msg.sender,freelancer:address(0),payment:_payment,guarantee:_guarantee,deadline:_deadline,acceptDeadline:_acceptDeadline,status:Status.Created})](contracts/GestorDeContratoGarantido.sol#L78-L86)
+
+contracts/GestorDeContratoGarantido.sol#L61-L92
+
+
+## timestamp
+Impact: Low
+Confidence: Medium
+ - [ ] ID-45
+[GestorDeContratoGarantido.cancelIfNotAccepted(uint256)](contracts/GestorDeContratoGarantido.sol#L150-L159) uses timestamp for comparisons
+	Dangerous comparisons:
+	- [require(bool,string)(block.timestamp > job.acceptDeadline,Too early)](contracts/GestorDeContratoGarantido.sol#L154)
+
+contracts/GestorDeContratoGarantido.sol#L150-L159
+
+
+ - [ ] ID-46
+[GestorDeContratoGarantido.acceptJob(uint256)](contracts/GestorDeContratoGarantido.sol#L95-L108) uses timestamp for comparisons
+	Dangerous comparisons:
+	- [require(bool,string)(block.timestamp <= job.acceptDeadline,Expired)](contracts/GestorDeContratoGarantido.sol#L99)
+
+contracts/GestorDeContratoGarantido.sol#L95-L108
+
+
+ - [ ] ID-47
+[GestorDeContratoGarantido.claimTimeout(uint256)](contracts/GestorDeContratoGarantido.sol#L162-L173) uses timestamp for comparisons
+	Dangerous comparisons:
+	- [require(bool,string)(block.timestamp > job.deadline,Too early)](contracts/GestorDeContratoGarantido.sol#L167)
+
+contracts/GestorDeContratoGarantido.sol#L162-L173
+
+
+## assembly
+Impact: Informational
+Confidence: High
+ - [ ] ID-48
+[SafeCast.toUint(bool)](node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#L1157-L1161) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#L1158-L1160)
+
+node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#L1157-L1161
+
+
+ - [ ] ID-49
+[StorageSlot.getAddressSlot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L66-L70) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L67-L69)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L66-L70
+
+
+ - [ ] ID-50
+[Math.tryModExp(bytes,bytes,bytes)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L451-L473) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L463-L472)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L451-L473
+
+
+ - [ ] ID-51
+[StorageSlot.getUint256Slot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L93-L97) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L94-L96)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L93-L97
+
+
+ - [ ] ID-52
+[Bytes._unsafeReadBytesOffset(bytes,uint256)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L326-L331) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L328-L330)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L326-L331
+
+
+ - [ ] ID-53
+[ERC721Utils.checkOnERC721Received(address,address,address,uint256,bytes)](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L25-L49) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L43-L45)
+
+node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L25-L49
+
+
+ - [ ] ID-54
+[Math.log2(uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L619-L658) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L655-L657)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L619-L658
+
+
+ - [ ] ID-55
+[Strings.toChecksumHexString(address)](node_modules/@openzeppelin/contracts/utils/Strings.sol#L108-L126) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L113-L115)
+
+node_modules/@openzeppelin/contracts/utils/Strings.sol#L108-L126
+
+
+ - [ ] ID-56
+[StorageSlot.getBooleanSlot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L75-L79) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L76-L78)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L75-L79
+
+
+ - [ ] ID-57
+[StorageSlot.getBytes32Slot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L84-L88) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L85-L87)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L84-L88
+
+
+ - [ ] ID-58
+[Bytes.replace(bytes,uint256,bytes,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L154-L172) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L167-L169)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L154-L172
+
+
+ - [ ] ID-59
+[Panic.panic(uint256)](node_modules/@openzeppelin/contracts/utils/Panic.sol#L50-L56) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Panic.sol#L51-L55)
+
+node_modules/@openzeppelin/contracts/utils/Panic.sol#L50-L56
+
+
+ - [ ] ID-60
+[Bytes.splice(bytes,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L117-L129) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L123-L126)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L117-L129
+
+
+ - [ ] ID-61
+[StorageSlot.getInt256Slot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L102-L106) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L103-L105)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L102-L106
+
+
+ - [ ] ID-62
+[Bytes.toNibbles(bytes)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L211-L244)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245
+
+
+ - [ ] ID-63
+[Strings._unsafeWriteBytesOffset(bytes,uint256,bytes1)](node_modules/@openzeppelin/contracts/utils/Strings.sol#L526-L531) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L528-L530)
+
+node_modules/@openzeppelin/contracts/utils/Strings.sol#L526-L531
+
+
+ - [ ] ID-64
+[StorageSlot.getBytesSlot(bytes)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L138-L142) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L139-L141)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L138-L142
+
+
+ - [ ] ID-65
+[Strings.escapeJSON(string)](node_modules/@openzeppelin/contracts/utils/Strings.sol#L461-L505) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L468-L470)
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L499-L502)
+
+node_modules/@openzeppelin/contracts/utils/Strings.sol#L461-L505
+
+
+ - [ ] ID-66
+[Math.mulDiv(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L229-L236)
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L242-L251)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L206-L277
+
+
+ - [ ] ID-67
+[Math.mul512(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L37-L46) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L41-L45)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L37-L46
+
+
+ - [ ] ID-68
+[StorageSlot.getStringSlot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L111-L115) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L112-L114)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L111-L115
+
+
+ - [ ] ID-69
+[Strings.toString(uint256)](node_modules/@openzeppelin/contracts/utils/Strings.sol#L42-L60) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L47-L49)
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L52-L54)
+
+node_modules/@openzeppelin/contracts/utils/Strings.sol#L42-L60
+
+
+ - [ ] ID-70
+[Strings._unsafeReadBytesOffset(bytes,uint256)](node_modules/@openzeppelin/contracts/utils/Strings.sol#L513-L518) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Strings.sol#L515-L517)
+
+node_modules/@openzeppelin/contracts/utils/Strings.sol#L513-L518
+
+
+ - [ ] ID-71
+[StorageSlot.getStringSlot(string)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L120-L124) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L121-L123)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L120-L124
+
+
+ - [ ] ID-72
+[Math.tryMul(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L73-L84) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L76-L80)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L73-L84
+
+
+ - [ ] ID-73
+[Bytes.slice(bytes,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L86-L98) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L93-L95)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L86-L98
+
+
+ - [ ] ID-74
+[Math.tryMod(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L102-L110) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L105-L108)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L102-L110
+
+
+ - [ ] ID-75
+[Math.tryDiv(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L89-L97) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L92-L95)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L89-L97
+
+
+ - [ ] ID-76
+[StorageSlot.getBytesSlot(bytes32)](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L129-L133) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L130-L132)
+
+node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L129-L133
+
+
+ - [ ] ID-77
+[Math._zeroBytes(bytes)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L478-L490) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L482-L484)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L478-L490
+
+
+ - [ ] ID-78
+[Math.tryModExp(uint256,uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L411-L435) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L413-L434)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L411-L435
+
+
+ - [ ] ID-79
+[Bytes.concat(bytes[])](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L183-L203) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L194-L196)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L183-L203
+
+
+ - [ ] ID-80
+[Math.add512(uint256,uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L25-L30) uses assembly
+	- [INLINE ASM](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L26-L29)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L25-L30
+
+
+## pragma
+Impact: Informational
+Confidence: High
+ - [ ] ID-81
+7 different versions of Solidity are used:
+	- Version constraint ^0.8.0 is used by:
+		-[^0.8.0](node_modules/@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol#L2)
+	- Version constraint ^0.8.20 is used by:
+		-[^0.8.20](node_modules/@openzeppelin/contracts/access/Ownable.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/Context.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/Panic.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L5)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L4)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#L5)
+		-[^0.8.20](node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#L4)
+		-[^0.8.20](contracts/ContractNFT.sol#L2)
+		-[^0.8.20](contracts/DAO.sol#L2)
+		-[^0.8.20](contracts/GestorDeContratoGarantido.sol#L2)
+		-[^0.8.20](contracts/MockV3Aggregator.sol#L2)
+		-[^0.8.20](contracts/Staking.sol#L2)
+		-[^0.8.20](contracts/TelToken.sol#L3)
+		-[^0.8.20](contracts/TokenSale.sol#L2)
+	- Version constraint >=0.8.4 is used by:
+		-[>=0.8.4](node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#L4)
+	- Version constraint >=0.4.16 is used by:
+		-[>=0.4.16](node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#L4)
+		-[>=0.4.16](node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#L4)
+	- Version constraint >=0.6.2 is used by:
+		-[>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#L4)
+		-[>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol#L4)
+		-[>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol#L4)
+		-[>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol#L4)
+	- Version constraint ^0.8.24 is used by:
+		-[^0.8.24](node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol#L4)
+		-[^0.8.24](node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol#L4)
+		-[^0.8.24](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L4)
+		-[^0.8.24](node_modules/@openzeppelin/contracts/utils/Strings.sol#L4)
+	- Version constraint >=0.5.0 is used by:
+		-[>=0.5.0](node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#L4)
+
+node_modules/@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol#L2
+
+
+## solc-version
+Impact: Informational
+Confidence: High
+ - [ ] ID-82
+Version constraint >=0.5.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- DirtyBytesArrayToStorage
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow
+	- privateCanBeOverridden
+	- SignedArrayStorageCopy
+	- ABIEncoderV2StorageArrayWithMultiSlotElement
+	- DynamicConstructorArgumentsClippedABIV2
+	- UninitializedFunctionPointerInConstructor
+	- IncorrectEventSignatureInLibraries
+	- ABIEncoderV2PackedStorage.
+It is used by:
+	- [>=0.5.0](node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#L4)
+
+node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#L4
+
+
+ - [ ] ID-83
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- [^0.8.20](node_modules/@openzeppelin/contracts/access/Ownable.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/Context.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/Panic.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#L5)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L4)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#L5)
+	- [^0.8.20](node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#L4)
+	- [^0.8.20](contracts/ContractNFT.sol#L2)
+	- [^0.8.20](contracts/DAO.sol#L2)
+	- [^0.8.20](contracts/GestorDeContratoGarantido.sol#L2)
+	- [^0.8.20](contracts/MockV3Aggregator.sol#L2)
+	- [^0.8.20](contracts/Staking.sol#L2)
+	- [^0.8.20](contracts/TelToken.sol#L3)
+	- [^0.8.20](contracts/TokenSale.sol#L2)
+
+node_modules/@openzeppelin/contracts/access/Ownable.sol#L4
+
+
+ - [ ] ID-84
+Version constraint >=0.8.4 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables.
+It is used by:
+	- [>=0.8.4](node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#L4)
+
+node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#L4
+
+
+ - [ ] ID-85
+Version constraint >=0.4.16 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- DirtyBytesArrayToStorage
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow
+	- privateCanBeOverridden
+	- SignedArrayStorageCopy
+	- ABIEncoderV2StorageArrayWithMultiSlotElement
+	- DynamicConstructorArgumentsClippedABIV2
+	- UninitializedFunctionPointerInConstructor_0.4.x
+	- IncorrectEventSignatureInLibraries_0.4.x
+	- ExpExponentCleanup
+	- NestedArrayFunctionCallDecoder
+	- ZeroFunctionSelector.
+It is used by:
+	- [>=0.4.16](node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#L4)
+	- [>=0.4.16](node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#L4)
+
+node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#L4
+
+
+ - [ ] ID-86
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- [^0.8.0](node_modules/@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol#L2)
+
+node_modules/@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol#L2
+
+
+ - [ ] ID-87
+Version constraint >=0.6.2 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- MissingEscapingInFormatting
+	- ArraySliceDynamicallyEncodedBaseType
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow.
+It is used by:
+	- [>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#L4)
+	- [>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol#L4)
+	- [>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol#L4)
+	- [>=0.6.2](node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol#L4)
+
+node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#L4
+
+
+## low-level-calls
+Impact: Informational
+Confidence: High
+ - [ ] ID-88
+Low level call in [TokenSale.buyTokens()](contracts/TokenSale.sol#L60-L73):
+	- [(okFee,None) = address(owner()).call{value: fee}()](contracts/TokenSale.sol#L69)
+
+contracts/TokenSale.sol#L60-L73
+
+
+ - [ ] ID-89
+Low level call in [TokenSale.sellTokens(uint256)](contracts/TokenSale.sol#L77-L96):
+	- [(okUser,None) = address(msg.sender).call{value: net}()](contracts/TokenSale.sol#L91)
+	- [(okOwner,None) = address(owner()).call{value: fee}()](contracts/TokenSale.sol#L94)
+
+contracts/TokenSale.sol#L77-L96
+
+
+## missing-inheritance
+Impact: Informational
+Confidence: High
+ - [ ] ID-90
+[DAO](contracts/DAO.sol#L8-L133) should inherit from [IDAO](contracts/GestorDeContratoGarantido.sol#L10-L15)
+
+contracts/DAO.sol#L8-L133
+
+
+## naming-convention
+Impact: Informational
+Confidence: High
+ - [ ] ID-91
+Parameter [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)._deadline](contracts/GestorDeContratoGarantido.sol#L64) is not in mixedCase
+
+contracts/GestorDeContratoGarantido.sol#L64
+
+
+ - [ ] ID-92
+Parameter [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)._guarantee](contracts/GestorDeContratoGarantido.sol#L63) is not in mixedCase
+
+contracts/GestorDeContratoGarantido.sol#L63
+
+
+ - [ ] ID-93
+Parameter [ContractNFT.setGestor(address)._gestor](contracts/ContractNFT.sol#L54) is not in mixedCase
+
+contracts/ContractNFT.sol#L54
+
+
+ - [ ] ID-94
+Parameter [Staking.setDAO(address)._dao](contracts/Staking.sol#L25) is not in mixedCase
+
+contracts/Staking.sol#L25
+
+
+ - [ ] ID-95
+Parameter [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)._payment](contracts/GestorDeContratoGarantido.sol#L62) is not in mixedCase
+
+contracts/GestorDeContratoGarantido.sol#L62
+
+
+ - [ ] ID-96
+Parameter [DAO.setConfig(address,address)._gestor](contracts/DAO.sol#L29) is not in mixedCase
+
+contracts/DAO.sol#L29
+
+
+ - [ ] ID-97
+Parameter [DAO.setConfig(address,address)._staking](contracts/DAO.sol#L29) is not in mixedCase
+
+contracts/DAO.sol#L29
+
+
+ - [ ] ID-98
+Parameter [GestorDeContratoGarantido.createJob(uint256,uint256,uint256,uint256)._acceptDeadline](contracts/GestorDeContratoGarantido.sol#L65) is not in mixedCase
+
+contracts/GestorDeContratoGarantido.sol#L65
+
+
+## too-many-digits
+Impact: Informational
+Confidence: Medium
+ - [ ] ID-99
+[Bytes.toNibbles(bytes)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245) uses literals with too many digits:
+	- [chunk_toNibbles_asm_0 = 0x00000000ffffffff00000000ffffffff00000000ffffffff00000000ffffffff & chunk_toNibbles_asm_0 << 32 | chunk_toNibbles_asm_0](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L226-L229)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245
+
+
+ - [ ] ID-100
+[TokenSale.slitherConstructorVariables()](contracts/TokenSale.sol#L11-L102) uses literals with too many digits:
+	- [rate = 1000000](contracts/TokenSale.sol#L12)
+
+contracts/TokenSale.sol#L11-L102
+
+
+ - [ ] ID-101
+[Math.log2(uint256)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L619-L658) uses literals with too many digits:
+	- [r = r | byte(uint256,uint256)(x >> r,0x0000010102020202030303030303030300000000000000000000000000000000)](node_modules/@openzeppelin/contracts/utils/math/Math.sol#L656)
+
+node_modules/@openzeppelin/contracts/utils/math/Math.sol#L619-L658
+
+
+ - [ ] ID-102
+[Bytes.reverseBytes32(bytes32)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L258-L272) uses literals with too many digits:
+	- [value = ((value >> 32) & 0x00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF) | ((value & 0x00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF) << 32)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L265-L267)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L258-L272
+
+
+ - [ ] ID-103
+[Bytes.toNibbles(bytes)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245) uses literals with too many digits:
+	- [chunk_toNibbles_asm_0 = 0x0000000000000000ffffffffffffffff0000000000000000ffffffffffffffff & chunk_toNibbles_asm_0 << 64 | chunk_toNibbles_asm_0](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L222-L225)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L210-L245
+
+
+ - [ ] ID-104
+[MockV3Aggregator.slitherConstructorVariables()](contracts/MockV3Aggregator.sol#L4-L20) uses literals with too many digits:
+	- [price = 300000000000](contracts/MockV3Aggregator.sol#L5)
+
+contracts/MockV3Aggregator.sol#L4-L20
+
+
+ - [ ] ID-105
+[Bytes.reverseBytes16(bytes16)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L275-L286) uses literals with too many digits:
+	- [value = ((value & 0xFFFFFFFF00000000FFFFFFFF00000000) >> 32) | ((value & 0x00000000FFFFFFFF00000000FFFFFFFF) << 32)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L282-L284)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L275-L286
+
+
+ - [ ] ID-106
+[Bytes.reverseBytes32(bytes32)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L258-L272) uses literals with too many digits:
+	- [value = ((value >> 64) & 0x0000000000000000FFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF) | ((value & 0x0000000000000000FFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF) << 64)](node_modules/@openzeppelin/contracts/utils/Bytes.sol#L268-L270)
+
+node_modules/@openzeppelin/contracts/utils/Bytes.sol#L258-L272
+
+
+## constable-states
+Impact: Optimization
+Confidence: High
+ - [ ] ID-107
+[TokenSale.rate](contracts/TokenSale.sol#L12) should be constant 
+
+contracts/TokenSale.sol#L12
+
+
+ - [ ] ID-108
+[MockV3Aggregator.price](contracts/MockV3Aggregator.sol#L5) should be constant 
+
+contracts/MockV3Aggregator.sol#L5
+
+
+ - [ ] ID-109
+[GestorDeContratoGarantido.feePercent](contracts/GestorDeContratoGarantido.sol#L23) should be constant 
+
+contracts/GestorDeContratoGarantido.sol#L23
+
+
+## immutable-states
+Impact: Optimization
+Confidence: High
+ - [ ] ID-110
+[GestorDeContratoGarantido.dao](contracts/GestorDeContratoGarantido.sol#L20) should be immutable 
+
+contracts/GestorDeContratoGarantido.sol#L20
+
+
+ - [ ] ID-111
+[GestorDeContratoGarantido.token](contracts/GestorDeContratoGarantido.sol#L18) should be immutable 
+
+contracts/GestorDeContratoGarantido.sol#L18
+
+
+ - [ ] ID-112
+[Staking.token](contracts/Staking.sol#L10) should be immutable 
+
+contracts/Staking.sol#L10
+
+
+ - [ ] ID-113
+[TokenSale.token](contracts/TokenSale.sol#L13) should be immutable 
+
+contracts/TokenSale.sol#L13
+
+
+ - [ ] ID-114
+[GestorDeContratoGarantido.nft](contracts/GestorDeContratoGarantido.sol#L19) should be immutable 
+
+contracts/GestorDeContratoGarantido.sol#L19
+
+
+ - [ ] ID-115
+[TokenSale.ethUsdPriceFeed](contracts/TokenSale.sol#L16) should be immutable 
+
+contracts/TokenSale.sol#L16
+
+
